@@ -16,7 +16,9 @@ namespace Dse.Geometry
     /// <summary>
     /// Represents a one-dimensional object representing a sequence of points and the line segments connecting them.
     /// </summary>
+#if !NETCORE
     [Serializable]
+#endif
     public class LineString : GeometryBase
     {
         /// <summary>
@@ -32,6 +34,7 @@ namespace Dse.Geometry
 
         }
 
+#if !NETCORE
         /// <summary>
         /// Creates a new instance of <see cref="LineString"/> using a serialization information.
         /// </summary>
@@ -40,6 +43,7 @@ namespace Dse.Geometry
             var coordinates = (double[][])info.GetValue("coordinates", typeof(double[][]));
             Points = AsReadOnlyCollection(coordinates.Select(arr => new Point(arr[0], arr[1])).ToArray());
         }
+#endif
 
         /// <summary>
         /// Creates a new instance of <see cref="LineString"/> using a list of points.
@@ -83,12 +87,14 @@ namespace Dse.Geometry
             return CombineHashCode(Points);
         }
 
+#if !NETCORE
         /// <inheritdoc />
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("type", "LineString");
             info.AddValue("coordinates", Points.Select(p => new [] { p.X, p.Y }));
         }
+#endif
 
         /// <summary>
         /// Returns Well-known text (WKT) representation of the geometry object.

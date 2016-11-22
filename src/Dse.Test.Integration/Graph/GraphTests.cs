@@ -27,8 +27,8 @@ namespace Dse.Test.Integration.Graph
         private const string GraphName = "graph1";
         private int _idGenerator;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetup()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             CcmHelper.Start(1, null, null, null, "graph");
             Trace.TraceInformation("Waiting additional time for test Cluster to be ready");
@@ -36,8 +36,8 @@ namespace Dse.Test.Integration.Graph
             CreateClassicGraph(CcmHelper.InitialContactPoint, GraphName);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             CcmHelper.Remove();
         }

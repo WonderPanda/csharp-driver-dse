@@ -16,8 +16,13 @@ namespace Dse.Geometry
     /// <summary>
     /// The driver-side representation for a DSE geospatial type.
     /// </summary>
+#if !NETCORE
     [Serializable]
-    public abstract class GeometryBase : ISerializable
+#endif
+    public abstract class GeometryBase
+#if !NETCORE
+        : ISerializable
+#endif
     {
         /// <summary>
         /// Checks for null items and returns a read-only collection with an array as underlying list.
@@ -59,10 +64,11 @@ namespace Dse.Geometry
             }
         }
 
-
+#if !NETCORE
         /// <summary>
         /// When overridden, sets the serialization info.
         /// </summary>
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+#endif
     }
 }

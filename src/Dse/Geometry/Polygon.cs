@@ -16,7 +16,9 @@ namespace Dse.Geometry
     /// Represents is a plane geometry figure that is bounded by a finite chain of straight line segments closing in a
     /// loop to form a closed chain or circuit.
     /// </summary>
+#if !NETCORE
     [Serializable]
+#endif
     public class Polygon : GeometryBase
     {
         /// <summary>
@@ -65,6 +67,7 @@ namespace Dse.Geometry
             Rings = AsReadOnlyCollection(rings, r => AsReadOnlyCollection(r));
         }
 
+#if !NETCORE
         /// <summary>
         /// Creates a new instance of <see cref="Polygon"/> using serialization information.
         /// </summary>
@@ -75,6 +78,7 @@ namespace Dse.Geometry
                 .Select(r => (IList<Point>)r.Select(p => new Point(p[0], p[1])).ToList())
                 .ToList());
         }
+#endif
 
         /// <summary>
         /// Returns a value indicating whether this instance and a specified object represent the same value.
@@ -111,12 +115,14 @@ namespace Dse.Geometry
             return CombineHashCode(Rings.Select(r => CombineHashCode(r.Select(p => p.GetHashCode()))));
         }
 
+#if !NETCORE
         /// <inheritdoc />
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("type", "Polygon");
             info.AddValue("coordinates", Rings.Select(r => r.Select(p => new [] { p.X, p.Y})));
         }
+#endif
 
         /// <summary>
         /// Returns Well-known text (WKT) representation of the geometry object.

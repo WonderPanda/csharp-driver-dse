@@ -469,8 +469,8 @@ namespace Dse
         /// </returns>
         public new DseCluster Build()
         {
-            var dseAssembly = Assembly.GetExecutingAssembly();
-            var cassandraAssembly = typeof(ISession).Assembly;
+            var dseAssembly = typeof(DseCluster).GetTypeInfo().Assembly;
+            var cassandraAssembly = typeof(ISession).GetTypeInfo().Assembly;
             Logger.Info("Using DataStax C# DSE driver v{0} (core driver v{1})", 
                 FileVersionInfo.GetVersionInfo(dseAssembly.Location).FileVersion,
                 FileVersionInfo.GetVersionInfo(cassandraAssembly.Location).FileVersion);
@@ -479,6 +479,7 @@ namespace Dse
                 .Define(new LineStringSerializer())
                 .Define(new PointSerializer())
                 .Define(new PolygonSerializer());
+
             base.WithTypeSerializers(typeSerializerDefinitions);
             var coreCluster = base.Build();
             var config = new DseConfiguration(coreCluster.Configuration, GraphOptions ?? new GraphOptions());
