@@ -13,6 +13,7 @@ using System.Numerics;
 using System.Threading;
 using Cassandra;
 using Cassandra.IntegrationTests.TestBase;
+using Dse.Geometry;
 using Dse.Graph;
 using Dse.Test.Integration.ClusterManagement;
 using NUnit.Framework;
@@ -528,6 +529,7 @@ namespace Dse.Test.Integration.Graph
         [TestCase("Duration", "1 minute", "PT1M")]
         [TestCase("Duration", "1 hour", "PT1H")]
         [TestCase("Text", "The quick brown fox jumps over the lazy dog", "The quick brown fox jumps over the lazy dog")]
+        [TestCase("Point", "POINT (44.1 45)", "POINT (44.1 45)")]
         public void Should_Support_Types(string type, object value, string expectedString)
         {
             using (var cluster = DseCluster.Builder()

@@ -5,6 +5,7 @@
 //  http://www.datastax.com/terms/datastax-dse-driver-license-terms
 //
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace Dse.Geometry
         /// Gets the read-only list of points describing the LineString.
         /// </summary>
         public IList<Point> Points { get; private set; }
+
+        /// <inheritdoc />
+        protected override IEnumerable GeoCoordinates
+        {
+            get { return Points.Select(p => new[] { p.X, p.Y }); }
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="LineString"/> using a sequence of points.
@@ -86,15 +93,6 @@ namespace Dse.Geometry
             // ReSharper disable once NonReadonlyMemberInGetHashCode
             return CombineHashCode(Points);
         }
-
-#if !NETCORE
-        /// <inheritdoc />
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("type", "LineString");
-            info.AddValue("coordinates", Points.Select(p => new [] { p.X, p.Y }));
-        }
-#endif
 
         /// <summary>
         /// Returns Well-known text (WKT) representation of the geometry object.

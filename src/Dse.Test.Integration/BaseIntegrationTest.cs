@@ -98,8 +98,12 @@ namespace Dse.Test.Integration
                 //Remove the parenthesis
                 testName = testName.Substring(0, testName.IndexOf('('));
             }
-            var methodAttr = type.GetMethod(testName)
-                .GetCustomAttribute<TestDseVersion>(true);
+            MethodInfo method = type.GetMethod(testName);
+            TestDseVersion methodAttr = null;
+            if (method != null)
+            {
+                methodAttr = method.GetCustomAttribute<TestDseVersion>(true);
+            }
             var attr = type.GetTypeInfo().GetCustomAttribute<TestDseVersion>();
             if (attr == null && methodAttr == null)
             {

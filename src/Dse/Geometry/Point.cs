@@ -5,6 +5,7 @@
 //  http://www.datastax.com/terms/datastax-dse-driver-license-terms
 //
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -30,6 +31,12 @@ namespace Dse.Geometry
         /// Returns the Y coordinate of this 2D point.
         /// </summary>
         public double Y { get; private set; }
+
+        /// <inheritdoc />
+        protected override IEnumerable GeoCoordinates
+        {
+            get { return new[] {X, Y}; }
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="Point"/>.
@@ -74,15 +81,6 @@ namespace Dse.Geometry
             return CombineHashCode(new [] { X, Y});
             // ReSharper enable NonReadonlyMemberInGetHashCode
         }
-
-#if !NETCORE
-        /// <inheritdoc />
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("type", "Point");
-            info.AddValue("coordinates", new [] { X, Y });
-        }
-#endif
 
         /// <summary>
         /// Returns Well-known text (WKT) representation of the geometry object.

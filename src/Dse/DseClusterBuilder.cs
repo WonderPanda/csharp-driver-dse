@@ -16,6 +16,7 @@ using Cassandra.Serialization;
 using Dse.Geometry;
 using Dse.Graph;
 using Dse.Policies;
+using Dse.Serialization.Geometry;
 
 namespace Dse
 {
