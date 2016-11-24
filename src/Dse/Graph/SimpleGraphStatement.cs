@@ -18,9 +18,9 @@ namespace Dse.Graph
     /// </summary>
     public class SimpleGraphStatement : GraphStatement
     {
-        private readonly string _query;
-        private readonly object _values;
-        private readonly IDictionary<string, object> _valuesDictionary;
+        public readonly string Query;
+        public readonly object Values;
+        public readonly IDictionary<string, object> ValuesDictionary;
 
         /// <summary>
         /// Creates a new instance of <see cref="SimpleGraphStatement"/> using a query with no parameters.
@@ -45,12 +45,12 @@ namespace Dse.Graph
             {
                 throw new ArgumentNullException("query");
             }
-            _query = query;
+            Query = query;
             if (values != null && !IsAnonymous(values))
             {
                 throw new ArgumentException("Expected anonymous object containing the parameters as properties", "values");
             }
-            _values = values;
+            Values = values;
         }
 
         /// <summary>
@@ -75,29 +75,29 @@ namespace Dse.Graph
             {
                 throw new ArgumentNullException("query");
             }
-            _query = query;
-            _valuesDictionary = values;
+            Query = query;
+            ValuesDictionary = values;
         }
 
         internal override IStatement GetIStatement(GraphOptions options)
         {
             string jsonParams = null;
-            if (_valuesDictionary != null)
+            if (ValuesDictionary != null)
             {
-                jsonParams = JsonConvert.SerializeObject(_valuesDictionary);
+                jsonParams = JsonConvert.SerializeObject(ValuesDictionary);
             }
-            else if (_values != null)
+            else if (Values != null)
             {
-                jsonParams = JsonConvert.SerializeObject(_values);
+                jsonParams = JsonConvert.SerializeObject(Values);
             }
             IStatement stmt;
             if (jsonParams != null)
             {
-                stmt = new TargettedSimpleStatement(_query, jsonParams);
+                stmt = new TargettedSimpleStatement(Query, jsonParams);
             }
             else
             {
-                stmt = new TargettedSimpleStatement(_query);
+                stmt = new TargettedSimpleStatement(Query);
             }
             //Set Cassandra.Statement properties
             if (Timestamp != null)
@@ -115,6 +115,28 @@ namespace Dse.Graph
                 .SetConsistencyLevel(ConsistencyLevel)
                 .SetReadTimeoutMillis(readTimeout)
                 .SetOutgoingPayload(options.BuildPayload(this));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is SimpleGraphStatement)) return false;
+            var comparisonStatement = (SimpleGraphStatement) obj;
+
+            return comparisonStatement.Query.Equals(Query) 
+                && JsonConvert.SerializeObject(comparisonStatement.Values).Equals(JsonConvert.SerializeObject(Values))
+                && JsonConvert.SerializeObject(comparisonStatement.ValuesDictionary).Equals(JsonConvert.SerializeObject(ValuesDictionary));
+        }
+
+        public override int GetHashCode()
+        {
+            var valuesString = JsonConvert.SerializeObject(Values);
+            var valuesDictionaryString = JsonConvert.SerializeObject(ValuesDictionary);
+
+            int hash = 27;
+            hash = (13 * hash) + Query.GetHashCode();
+            hash = (13 * hash) + valuesString.GetHashCode();
+            hash = (13 * hash) + valuesDictionaryString.GetHashCode();
+            return hash;
         }
     }
 }
