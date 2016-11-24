@@ -18,9 +18,9 @@ namespace Dse.Graph
     /// </summary>
     public class SimpleGraphStatement : GraphStatement
     {
-        public readonly string Query;
-        public readonly object Values;
-        public readonly IDictionary<string, object> ValuesDictionary;
+        public string Query { get; private set; }
+        public object Values { get; private set; }
+        public IDictionary<string, object> ValuesDictionary { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="SimpleGraphStatement"/> using a query with no parameters.
